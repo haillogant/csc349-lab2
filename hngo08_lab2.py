@@ -1,0 +1,86 @@
+# A template for lab 3 - strong connectivity in graphs - for CSC 349 at Cal Poly
+# Reads a file with a list of edges, then creates one component for each node and outputs it to the screen
+# Credit: Rodrigo Canaan
+
+import sys
+import math
+
+class node:
+
+    def __init__(self,name,out_edges,in_edges,previsit, postvisit,component):
+        self.name = name
+        self.out_edges = out_edges
+        self.in_edges = in_edges
+        self.previsit = previsit
+        self.postvisit = postvisit
+        self.component = component
+
+def strong_connectivity(G): # new code by Hailey Ngo 
+    visited = [False] * len(G) 
+    stack = []
+
+    def dfs_forward(v): 
+        visited[v] = True
+
+        for w in G[v].out_edges: 
+            if not visited[w]: 
+                dfs_forward(w)
+
+        stack.append(v) 
+
+    def dfs_reverse(v, component): 
+        visited[v] = True
+        component.append(v)
+
+        for w in G[v].in_edges: 
+            if not visited[w]: 
+                dfs_reverse(w, component) 
+
+    for v in range(len(G)): 
+        if not visited[v]: 
+            dfs_forward(v) 
+
+    visited = [False] * len(G) 
+    components = []
+
+    while stack: 
+        v = stack.pop()
+
+        if not visited[v]: 
+            component = []
+            dfs_reverse(v, component) 
+            components.append(component) 
+
+    sort_component_list(components)
+    return components
+
+def sort_component_list(components):
+    for c in components: 
+        c.sort()
+    components.sort(key = lambda x: x[0]) 
+
+def read_file(filename):
+    with open(filename) as f:
+        lines = f.readlines()
+        v = int(lines[0])
+        if  v == 0:
+            raise ValueError("Graph must have one or more vertices")
+        G = list(node(name = i, out_edges=[],in_edges=[],previsit= -1, postvisit=-1, component=None) for i in range(v))
+        for l in lines[1:]:
+            tokens = l.split(",")
+            fromVertex,toVertex = (int(tokens[0]),int(tokens[1]))
+            G[fromVertex].out_edges.append(toVertex)
+            G[toVertex].in_edges.append(fromVertex)
+        return G
+
+
+def main():
+    filename = sys.argv[1]
+    G = read_file(filename)
+    components = strong_connectivity(G)
+    print(components)
+
+
+if __name__ == '__main__':
+    main()
+

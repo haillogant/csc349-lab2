@@ -1,4 +1,4 @@
-# A template for lab 2 - strong connectivity in graphs - for CSC 349 at Cal Poly
+# A template for lab 3 - strong connectivity in graphs - for CSC 349 at Cal Poly
 # Reads a file with a list of edges, then creates one component for each node and outputs it to the screen
 # Credit: Rodrigo Canaan 
 

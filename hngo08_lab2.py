@@ -19,6 +19,7 @@ def strong_connectivity(G): # new code by Hailey Ngo
     visited = [False] * len(G) 
     stack = []
 
+    # nested functions for looking forward and backward
     def dfs_forward(v): 
         visited[v] = True
 
@@ -36,6 +37,7 @@ def strong_connectivity(G): # new code by Hailey Ngo
             if not visited[w]: 
                 dfs_reverse(w, component) 
 
+    # main function 
     for v in range(len(G)): 
         if not visited[v]: 
             dfs_forward(v) 
